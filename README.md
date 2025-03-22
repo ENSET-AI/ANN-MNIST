@@ -1,6 +1,6 @@
 # Neural Network for Digit Classification
 
-For detailed mathematical explanations, refer to [README.pdf](README.pdf).
+For detailed mathematical explanations, refer to [README.pdf](Reports/README.pdf).
 
 This project implements a neural network from scratch to classify handwritten digits from the `sklearn` Digits dataset. The network is trained using backpropagation and gradient descent.
 
