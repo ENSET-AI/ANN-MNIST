@@ -1,7 +1,3 @@
-<script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
-
 # Neural Network for Digit Classification
 
 This project implements a neural network from scratch to classify handwritten digits from the `sklearn` Digits dataset. The network is trained using backpropagation and gradient descent.
@@ -60,7 +56,10 @@ The neural network consists of **3 layers**:
 ## Activation Functions
 
 - **ReLU**: Used in the hidden layers to introduce non-linearity.
+- ```math
   $$ \text{ReLU}(x) = \max(0, x) $$
+  ```
+  
 
 - **Softmax**: Used in the output layer to convert logits into probabilities.  
   The softmax function is defined as:
