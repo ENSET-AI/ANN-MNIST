@@ -1,7 +1,5 @@
 # Neural Network for Digit Classification
 
-For detailed mathematical explanations, refer to [README.pdf](README.pdf).
-
 This project implements a neural network from scratch to classify handwritten digits from the `sklearn` Digits dataset. The network is trained using backpropagation and gradient descent.
 
 ---
@@ -58,7 +56,79 @@ The neural network consists of **3 layers**:
 ## Activation Functions
 
 - **ReLU**: Used in the hidden layers to introduce non-linearity.
-- **Softmax**: Used in the output layer to convert logits into probabilities.
+  $$ \text{ReLU}(x) = \max(0, x) $$
+
+- **Softmax**: Used in the output layer to convert logits into probabilities.  
+  The softmax function is defined as:
+  $$ \text{Softmax}(z*i) = \frac{e^{z_i}}{\sum*{j=1}^{n} e^{z_j}} $$
+  where $ z_i $ is the $ i $-th logit, and $ n $ is the total number of logits.  
+  This ensures that the output probabilities sum to 1.
+
+---
+
+## Forward Propagation
+
+1. **Layer 1**:
+   $$ z^{(1)} = X \cdot W^{(1)} + b^{(1)} $$
+   $$ a^{(1)} = \text{ReLU}(z^{(1)}) $$
+
+2. **Layer 2**:
+   $$ z^{(2)} = a^{(1)} \cdot W^{(2)} + b^{(2)} $$
+   $$ a^{(2)} = \text{ReLU}(z^{(2)}) $$
+
+3. **Layer 3 (Output Layer)**:
+   $$ z^{(3)} = a^{(2)} \cdot W^{(3)} + b^{(3)} $$
+   $$ \hat{Y} = a^{(3)} = \text{Softmax}(z^{(3)}) $$
+
+---
+
+## Loss Function
+
+The loss function used is **Cross-Entropy Loss**:
+$$ J = -\frac{1}{n} \sum \left( Y \cdot \log(\hat{Y}) \right) $$
+
+---
+
+## Backpropagation
+
+The gradients are computed for each layer using the chain rule:
+
+1. **Output Layer**:
+
+   - Gradients for weights and biases are computed as:
+     $$ \frac{\partial J}{\partial W^{(3)}} = \frac{1}{n} \sum (a^{(3)} - Y) \cdot a^{(2)T} $$
+     $$ \frac{\partial J}{\partial b^{(3)}} = \frac{1}{n} \sum (a^{(3)} - Y) $$
+
+2. **Hidden Layers**:
+
+   - For Layer 2:
+     $$ \delta^{(2)} = \left( \delta^{(3)} \cdot W^{(3)} \right) \odot \text{ReLU}'(z^{(2)}) $$
+     $$ \frac{\partial J}{\partial W^{(2)}} = \frac{1}{n} \sum \delta^{(2)} \cdot a^{(1)T} $$
+     $$ \frac{\partial J}{\partial b^{(2)}} = \frac{1}{n} \sum \delta^{(2)} $$
+
+   - For Layer 1:
+     $$ \delta^{(1)} = \left( \delta^{(2)} \cdot W^{(2)} \right) \odot \text{ReLU}'(z^{(1)}) $$
+     $$ \frac{\partial J}{\partial W^{(1)}} = \frac{1}{n} \sum \delta^{(1)} \cdot X^T $$
+     $$ \frac{\partial J}{\partial b^{(1)}} = \frac{1}{n} \sum \delta^{(1)} $$
+
+   - Here, $ \delta^{(i)} $ represents the error term for layer $ i $, and the derivatives of the activation functions are as follows:
+
+     - **ReLU**:
+
+       $$
+       \text{ReLU}'(z) = \begin{cases}
+       1 & \text{if } z > 0 \\
+       0 & \text{if } z \leq 0
+       \end{cases}
+       $$
+
+     - **Softmax**:
+       The derivative of the softmax function for a single output \( i \) is:
+       $$
+       \frac{\partial \text{Softmax}(z_i)}{\partial z_j} =
+       \text{Softmax}(z_i) \cdot (\delta_{ij} - \text{Softmax}(z_j))
+       $$
+       where \( \delta\_{ij} \) is the Kronecker delta, equal to 1 if \( i = j \), and 0 otherwise.
 
 ---
 
@@ -69,11 +139,16 @@ The neural network consists of **3 layers**:
 - **Batch Size**: 32
 - **Epochs**: 500
 
+The weights are updated using:
+$$ W^{(i)} \leftarrow W^{(i)} - \alpha \cdot \frac{\partial J}{\partial W^{(i)}} $$
+$$ b^{(i)} \leftarrow b^{(i)} - \alpha \cdot \frac{\partial J}{\partial b^{(i)}} $$
+
 ---
 
 ## Results
 
 After training, the model is evaluated on the test set. The accuracy is computed as:
+$$ \text{Accuracy} = \frac{\text{Number of Correct Predictions}}{\text{Total Predictions}} $$
 
 ### Results on the training set
 
